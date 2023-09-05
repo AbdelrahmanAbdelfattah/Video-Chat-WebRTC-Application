@@ -83,7 +83,7 @@ body {
   height: 110px;
   margin: 0 40px;
   background: rgba(196, 196, 196, 0.2);
-  filter: blur(80px);
+  background-filter: blur(80px);
   border-radius: 15px;
   display: flex;
   flex-direction: column;
@@ -143,7 +143,7 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(196, 196, 196, 0.2);
-  filter: blur(80px);
+  background-filter: blur(80px);
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.5);
   color: white;
@@ -450,7 +450,7 @@ body {
   left: 0;
   top: 0;
   background: rgba(196, 196, 196, 0.2);
-  filter: blur(80px);
+  background-filter: blur(80px);
 }
 
 .video_recording_buttons_container {
