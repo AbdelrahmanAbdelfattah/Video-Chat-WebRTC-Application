@@ -20,6 +20,11 @@ io.on("connection", (socket) => {
   connectedPeers.push(socket.id);
   console.log(socket.id);
 
+  socket.on("pre-offer", (data) => {
+    console.log("pre-offer-came");
+    console.log(data);
+  });
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
     const newConnectedPeers = connectedPeers.filter(
