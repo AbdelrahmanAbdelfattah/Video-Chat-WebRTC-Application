@@ -12,7 +12,7 @@ export const getIncomingCallDialog = (
 
   const title = document.createElement("p");
   title.classList.add("dialog_title");
-  title.innerHTML = `Incoming ${callTyoeInfo} call `;
+  title.innerHTML = `Incoming ${callTyoeInfo} Call `;
 
   const imageContainer = document.createElement("div");
   imageContainer.classList.add("dialog_image_container");
@@ -46,6 +46,5 @@ export const getIncomingCallDialog = (
   dialogContent.appendChild(imageContainer);
   dialogContent.appendChild(buttonContainer);
 
-  const dialogHTML = document.getElementById("dialog");
-  dialogHTML.appendChild(dialog);
+  return dialog;
 };
