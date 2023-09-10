@@ -27,12 +27,11 @@ io.on("connection", (socket) => {
       (peerSocketId) => calleePersonalCode === peerSocketId
     );
 
-    if (connectedPeers) {
+    if (connectedPeer) {
       const data = {
         callerSocketId: socket.id,
         callType,
       };
-      console.log(` the callee is   ${calleePersonalCode}`);
       io.to(calleePersonalCode).emit("pre-offer", data);
     }
   });
