@@ -39,6 +39,17 @@ io.on("connection", (socket) => {
   socket.on("pre-offer-answer", (data) => {
     console.log("pre-offer-answer came ");
     console.log(data);
+
+    const { callerSocketId } = data;
+
+    const connectedPeer = connectedPeers.find(
+      (peerSocketId) => callerSocketId === peerSocketId
+    );
+
+    if (connectedPeer) {
+      console.log("pre-offer-answer sent to tha caller ");
+      io.to(data.callerSocketId).emit("pre-offer-answer", data);
+    }
   });
 
   socket.on("disconnect", () => {

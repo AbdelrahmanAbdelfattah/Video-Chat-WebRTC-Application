@@ -56,6 +56,30 @@ export const sendPreOfferAnswer = (preOfferAnswer) => {
     callerSocketId: connectedUserDetails.socketId,
     preOfferAnswer,
   };
-
+  ui.removeAllDialogs();
   wss.sendPreOfferAnswer(data);
+};
+
+export const handlePreOfferAnswer = (data) => {
+  const { preOfferAnswer } = data;
+
+  ui.removeAllDialogs();
+
+  //user disconnect for example
+  if (preOfferAnswer === constants.preOfferAnswer.CALLEE_NOT_FOUND) {
+    //show dialog that callee has not been found
+  }
+
+  //user in another call for example
+  if (preOfferAnswer === constants.preOfferAnswer.CALL_UNAVAILABLE) {
+    //show dialog that callee is not able to connect
+  }
+
+  if (preOfferAnswer === constants.preOfferAnswer.CALL_REJECTED) {
+    //show dialog that call is rejected by callee
+  }
+
+  if (preOfferAnswer === constants.preOfferAnswer.CALL_ACCEPTED) {
+    //send webREC offer
+  }
 };
