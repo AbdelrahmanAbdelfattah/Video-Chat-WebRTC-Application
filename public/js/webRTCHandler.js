@@ -67,15 +67,19 @@ export const handlePreOfferAnswer = (data) => {
 
   //user disconnect for example
   if (preOfferAnswer === constants.preOfferAnswer.CALLEE_NOT_FOUND) {
+    ui.showInfoDialog(preOfferAnswer);
     //show dialog that callee has not been found
   }
 
   //user in another call for example
   if (preOfferAnswer === constants.preOfferAnswer.CALL_UNAVAILABLE) {
+    ui.showInfoDialog(preOfferAnswer);
     //show dialog that callee is not able to connect
   }
 
   if (preOfferAnswer === constants.preOfferAnswer.CALL_REJECTED) {
+    console.log("call rejected");
+    ui.showInfoDialog(preOfferAnswer);
     //show dialog that call is rejected by callee
   }
 

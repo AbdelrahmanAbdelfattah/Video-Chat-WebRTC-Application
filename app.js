@@ -33,6 +33,10 @@ io.on("connection", (socket) => {
         callType,
       };
       io.to(calleePersonalCode).emit("pre-offer", data);
+    } else {
+      const data = { preOfferAnswer: "CALLEE_NOT_FOUND" };
+
+      io.to(socket.id).emit("pre-offer-answer", data);
     }
   });
 
@@ -47,7 +51,6 @@ io.on("connection", (socket) => {
     );
 
     if (connectedPeer) {
-      console.log("pre-offer-answer sent to tha caller ");
       io.to(data.callerSocketId).emit("pre-offer-answer", data);
     }
   });
