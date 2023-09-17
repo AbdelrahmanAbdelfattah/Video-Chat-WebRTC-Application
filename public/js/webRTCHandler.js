@@ -40,6 +40,7 @@ export const handlePreOffer = (data) => {
 export const acceptCallHandler = () => {
   console.log("call accepted");
   sendPreOfferAnswer(constants.preOfferAnswer.CALL_ACCEPTED);
+  ui.showCallElements(connectedUserDetails.callType);
 };
 
 export const rejectCallHandler = () => {
@@ -84,6 +85,7 @@ export const handlePreOfferAnswer = (data) => {
   }
 
   if (preOfferAnswer === constants.preOfferAnswer.CALL_ACCEPTED) {
+    ui.showCallElements(connectedUserDetails.callType);
     //send webREC offer
   }
 };
