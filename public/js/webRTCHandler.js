@@ -1,8 +1,35 @@
 import * as wss from "./wss.js";
 import * as constants from "./constants.js";
 import * as ui from "./ui.js";
+import * as store from "./store.js";
 
 let connectedUserDetails;
+
+const defaultConstraints = {
+  audio: true,
+  video: true,
+};
+
+export const getLocalPreview = () => {
+  console.log("the video is playing from getLocalPreview");
+  //  The navigator object is a part of the JavaScript Web API,
+  //  specifically the Browser Object Model (BOM). It provides information
+  //  about the client's web browser and its capabilities. It's not part of the core JavaScript language
+  //  but is available in browser environments.
+  //  navigator.mediaDevices:
+  //  Provides access to media input devices like cameras and microphones through the MediaDevices API.
+
+  navigator.mediaDevices
+    .getUserMedia(defaultConstraints)
+    .then((stream) => {
+      ui.updateLocalVideo(stream);
+      store.setLocalStream(stream);
+    })
+    .catch((err) => {
+      console.log("error occured when trying to get an access to camera");
+      console.log(err);
+    });
+};
 
 export const sendPreOffer = (callType, calleePersonalCode) => {
   connectedUserDetails = {
