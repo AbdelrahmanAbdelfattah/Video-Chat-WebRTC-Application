@@ -65,7 +65,7 @@ const createPeerConnection = () => {
   if (
     connectedUserDetails.callType === constants.callType.VIDEO_PERSONAL_CODE
   ) {
-    const localStream = store.getState.localStream;
+    const localStream = store.getState().localStream;
 
     for (const track of localStream.getTracks()) {
       peerConnection.addTrack(track, localStream);
@@ -108,6 +108,7 @@ export const handlePreOffer = (data) => {
 
 export const acceptCallHandler = () => {
   console.log("call accepted");
+  createPeerConnection();
   sendPreOfferAnswer(constants.preOfferAnswer.CALL_ACCEPTED);
   ui.showCallElements(connectedUserDetails.callType);
 };
@@ -155,6 +156,23 @@ export const handlePreOfferAnswer = (data) => {
 
   if (preOfferAnswer === constants.preOfferAnswer.CALL_ACCEPTED) {
     ui.showCallElements(connectedUserDetails.callType);
+    createPeerConnection();
     //send webREC offer
+    sendWebRTCOffer();
   }
+};
+
+const sendWebRTCOffer = async () => {
+  const offer = await peerConnection.createOffer();
+  peerConnection.setLocalDescription(offer);
+  wss.sendDataUsingWebRTCSignaling({
+    connectedUserSocketId: connectedUserDetails.socketId,
+    type: constants.webRTCSignaling.OFFER,
+    offer: offer,
+  });
+};
+
+export const handleWebRTCOffer = (data) => {
+  console.log("webRTC Offer came ");
+  console.log(data);
 };

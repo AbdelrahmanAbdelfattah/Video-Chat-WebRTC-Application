@@ -13,11 +13,13 @@ export const updateLocalVideo = (stream) => {
   localVideo.srcObject = stream;
 
   localVideo.addEventListener("loadedmetadata", () => {
-    console.log("local video loaded");
     localVideo.play();
   });
+};
 
-  console.log("the video is playing from updateLocalVideo");
+export const updateRemoteVideo = (stream) => {
+  const remote_video = document.getElementById("remote_video");
+  remote_video.srcObject = stream;
 };
 
 export const showIncomingCallDialog = (
