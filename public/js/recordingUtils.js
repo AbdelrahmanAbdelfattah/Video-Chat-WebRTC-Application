@@ -1,3 +1,5 @@
+import * as store from "./store.js";
+
 let mediaRecorder;
 // Codecs, short for "compression-decompression," are software or hardware algorithms that encode and decode digital data,
 // particularly audio and video. They play a crucial role in multimedia applications by compressing data for transmission or
