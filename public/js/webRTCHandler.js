@@ -282,3 +282,38 @@ export const switchBetweenCameraAndScreenSharing = async (
     }
   }
 };
+
+// hang up
+
+export const handleHangUp = () => {
+  const data = {
+    connectedUserSocketId: connectedUserDetails.socketId,
+  };
+
+  wss.sendUserHangedUp(data);
+  closePeerConnectionAndResetState();
+};
+
+export const handleConnectedUserHangedUp = () => {
+  closePeerConnectionAndResetState();
+};
+
+export const closePeerConnectionAndResetState = () => {
+  if (peerConnection) {
+    peerConnection.close();
+    peerConnection = null;
+  }
+
+  // active mic and camera
+
+  if (
+    connectedUserDetails.callType === constants.callType.VIDEO_PERSONAL_CODE ||
+    connectedUserDetails.callType === constants.callType.VIDEO_STRANGER
+  ) {
+    store.getState().localStream.getVideoTracks()[0].enabled = true;
+    store.getState().localStream.getAudioTracks()[0].enabled = true;
+  }
+
+  ui.updateUIAfterHangUp(connectedUserDetails.callType);
+  connectedUserDetails = null;
+};
