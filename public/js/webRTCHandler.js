@@ -17,7 +17,6 @@ const configuration = {
 };
 
 export const getLocalPreview = () => {
-  console.log("the video is playing from getLocalPreview");
   //  The navigator object is a part of the JavaScript Web API,
   //  specifically the Browser Object Model (BOM). It provides information
   //  about the client's web browser and its capabilities. It's not part of the core JavaScript language
@@ -29,6 +28,8 @@ export const getLocalPreview = () => {
     .getUserMedia(defaultConstraints)
     .then((stream) => {
       ui.updateLocalVideo(stream);
+      ui.showVideoCallButtons();
+      store.setCallState(constants.callState.CALL_AVAILABLE);
       store.setLocalStream(stream);
     })
     .catch((err) => {
@@ -113,6 +114,7 @@ export const sendPreOffer = (callType, calleePersonalCode) => {
     const data = { callType, calleePersonalCode };
 
     ui.showCallingDialog(callingDialogRejectCallHandler);
+    store.setCallState(constants.callState.CALL_UNAVAILABLE);
     wss.sendPreOffer(data);
   }
 };
@@ -120,10 +122,19 @@ export const sendPreOffer = (callType, calleePersonalCode) => {
 export const handlePreOffer = (data) => {
   const { callerSocketId, callType } = data;
 
+  if (!checkCallPossibility()) {
+    return sendPreOfferAnswer(
+      constants.preOfferAnswer.CALL_UNAVAILABLE,
+      callerSocketId
+    );
+  }
+
   connectedUserDetails = {
     socketId: callerSocketId,
     callType,
   };
+
+  store.setCallState(constants.callState.CALL_UNAVAILABLE);
 
   if (
     callType === constants.callType.CHAT_PERSONAL_CODE ||
@@ -142,6 +153,7 @@ export const acceptCallHandler = () => {
 
 export const rejectCallHandler = () => {
   console.log("call rejected");
+  setIncomingCallsAvailable();
   sendPreOfferAnswer(constants.preOfferAnswer.CALL_REJECTED);
 };
 
@@ -149,9 +161,13 @@ const callingDialogRejectCallHandler = () => {
   console.log("rejecting the call");
 };
 
-export const sendPreOfferAnswer = (preOfferAnswer) => {
+export const sendPreOfferAnswer = (preOfferAnswer, callerSocketId = null) => {
+  const socketId = callerSocketId
+    ? callerSocketId
+    : connectedUserDetails.socketId;
+
   const data = {
-    callerSocketId: connectedUserDetails.socketId,
+    callerSocketId: socketId,
     preOfferAnswer,
   };
   ui.removeAllDialogs();
@@ -165,18 +181,21 @@ export const handlePreOfferAnswer = (data) => {
 
   //user disconnect for example
   if (preOfferAnswer === constants.preOfferAnswer.CALLEE_NOT_FOUND) {
+    setIncomingCallsAvailable();
     ui.showInfoDialog(preOfferAnswer);
     //show dialog that callee has not been found
   }
 
   //user in another call for example
   if (preOfferAnswer === constants.preOfferAnswer.CALL_UNAVAILABLE) {
+    setIncomingCallsAvailable();
+
     ui.showInfoDialog(preOfferAnswer);
     //show dialog that callee is not able to connect
   }
 
   if (preOfferAnswer === constants.preOfferAnswer.CALL_REJECTED) {
-    console.log("call rejected");
+    setIncomingCallsAvailable();
     ui.showInfoDialog(preOfferAnswer);
     //show dialog that call is rejected by callee
   }
@@ -315,5 +334,35 @@ export const closePeerConnectionAndResetState = () => {
   }
 
   ui.updateUIAfterHangUp(connectedUserDetails.callType);
+
+  setIncomingCallsAvailable();
+
   connectedUserDetails = null;
+};
+
+const checkCallPossibility = (callType) => {
+  const callState = store.getState().callState;
+
+  if (callState === constants.callState.CALL_AVAILABLE) {
+    return true;
+  }
+
+  if (
+    (callType === constants.callType.VIDEO_PERSONAL_CODE ||
+      callType === constants.callType.VIDEO_STRANGER) &&
+    callState === constants.callState.CALL_AVAILABLE_ONLY_CHAT
+  ) {
+    return false;
+  }
+
+  return false;
+};
+
+const setIncomingCallsAvailable = () => {
+  const localStream = store.getState().localStream;
+  if (localStream) {
+    store.setCallState(constants.callState.CALL_AVAILABLE);
+  } else {
+    store.setCallState(constants.callState.CALL_AVAILABLE_ONLY_CHAT);
+  }
 };
