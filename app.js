@@ -15,6 +15,7 @@ app.get("/", (req, res) => {
 });
 
 let connectedPeers = [];
+let connectedPeerStrangers = [];
 
 io.on("connection", (socket) => {
   connectedPeers.push(socket.id);
@@ -79,14 +80,33 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-    const newConnectedPeers = connectedPeers.filter(
-      (peerSocketId) => socket.id !== peerSocketId
-    );
+  socket.on("stranger-connection-status", (data) => {
+    const { status } = data;
+    //add possibility to connect with strangers
+    if (status) {
+      connectedPeerStrangers.push(socket.id);
+    } else {
+      //cancel possibility to connect with stranger
+      const newConnectedPeerStrangers = connectedPeerStrangers.filter(
+        (peerSocketId) => peerSocketId !== socket.id
+      );
+      connectedPeerStrangers = newConnectedPeerStrangers;
+    }
 
+    console.log(connectedPeerStrangers);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("user disconnect from SOCKET.IO");
+    const newConnectedPeers = connectedPeers.filter(
+      (peerSocketId) => peerSocketId !== socket.id
+    );
     connectedPeers = newConnectedPeers;
-    console.log(connectedPeers);
+
+    const newConnectedPeersStrangers = connectedPeerStrangers.filter(
+      (peerSocketId) => peerSocketId !== socket.id
+    );
+    connectedPeerStrangers = newConnectedPeersStrangers;
   });
 });
 server.listen(port, () => {
