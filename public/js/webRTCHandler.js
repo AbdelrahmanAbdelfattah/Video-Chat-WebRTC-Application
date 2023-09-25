@@ -86,7 +86,8 @@ const createPeerConnection = () => {
   // add our stream to perrconnection
 
   if (
-    connectedUserDetails.callType === constants.callType.VIDEO_PERSONAL_CODE
+    connectedUserDetails.callType === constants.callType.VIDEO_PERSONAL_CODE ||
+    connectedUserDetails.callType === constants.callType.VIDEO_STRANGER
   ) {
     const localStream = store.getState().localStream;
 
@@ -117,6 +118,18 @@ export const sendPreOffer = (callType, calleePersonalCode) => {
     store.setCallState(constants.callState.CALL_UNAVAILABLE);
     wss.sendPreOffer(data);
   }
+
+  if (
+    callType === constants.callType.CHAT_STRANGER ||
+    callType === constants.callType.VIDEO_STRANGER
+  ) {
+    const data = {
+      callType,
+      calleePersonalCode,
+    };
+    store.setCallState(constants.callState.CALL_UNAVAILABLE);
+    wss.sendPreOffer(data);
+  }
 };
 
 export const handlePreOffer = (data) => {
@@ -141,6 +154,15 @@ export const handlePreOffer = (data) => {
     callType === constants.callType.VIDEO_PERSONAL_CODE
   ) {
     ui.showIncomingCallDialog(callType, acceptCallHandler, rejectCallHandler);
+  }
+
+  if (
+    callType === constants.callType.CHAT_STRANGER ||
+    callType === constants.callType.VIDEO_STRANGER
+  ) {
+    createPeerConnection();
+    sendPreOfferAnswer(constants.preOfferAnswer.CALL_ACCEPTED);
+    ui.showCallElements(connectedUserDetails.callType);
   }
 };
 
