@@ -32,8 +32,6 @@ const personalCodeVideoButton = document.getElementById(
 );
 
 personalCodeChatButton.addEventListener("click", () => {
-  console.log("chat button clicked");
-
   const calleePersonalCode = document.getElementById(
     "personal_code_input"
   ).value;
@@ -43,8 +41,6 @@ personalCodeChatButton.addEventListener("click", () => {
 });
 
 personalCodeVideoButton.addEventListener("click", () => {
-  console.log("video button clicked");
-
   const calleePersonalCode = document.getElementById(
     "personal_code_input"
   ).value;
@@ -105,7 +101,6 @@ switchForScreenSharingButton.addEventListener("click", () => {
 
 const newMessageInput = document.getElementById("new_message_input");
 newMessageInput.addEventListener("keydown", (event) => {
-  console.log("change occured");
   const key = event.key;
 
   if (key === "Enter") {

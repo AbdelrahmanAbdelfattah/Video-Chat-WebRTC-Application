@@ -46,19 +46,15 @@ const createPeerConnection = () => {
   peerConnection.ondatachannel = (event) => {
     const dataChannel = event.channel;
 
-    dataChannel.onopen = () => {
-      console.log("peer connection is ready to recieve datachannel messages ");
-    };
+    dataChannel.onopen = () => {};
 
     dataChannel.onmessage = (event) => {
       const message = JSON.parse(event.data);
       ui.appendMessage(message);
-      console.log(message);
     };
   };
 
   peerConnection.onicecandidate = (event) => {
-    console.log("getting ice candidate from stun server");
     if (event.candidate) {
       // send our ice candidate to other peer
       wss.sendDataUsingWebRTCSignaling({
@@ -71,7 +67,6 @@ const createPeerConnection = () => {
 
   peerConnection.onconnectionstatechange = (event) => {
     if (peerConnection.connectionState === "connected") {
-      console.log("Successfully connected with other peer");
     }
   };
 
@@ -167,20 +162,17 @@ export const handlePreOffer = (data) => {
 };
 
 export const acceptCallHandler = () => {
-  console.log("call accepted");
   createPeerConnection();
   sendPreOfferAnswer(constants.preOfferAnswer.CALL_ACCEPTED);
   ui.showCallElements(connectedUserDetails.callType);
 };
 
 export const rejectCallHandler = () => {
-  console.log("call rejected");
   setIncomingCallsAvailable();
   sendPreOfferAnswer(constants.preOfferAnswer.CALL_REJECTED);
 };
 
 const callingDialogRejectCallHandler = () => {
-  console.log("reject calling ");
   const data = {
     connectedUserSocketId: connectedUserDetails.socketId,
   };
@@ -257,7 +249,6 @@ export const handleWebRTCOffer = async (data) => {
 };
 
 export const handleWebRTCAnswer = async (data) => {
-  console.log("handle webRTC answer");
   await peerConnection.setRemoteDescription(data.answer);
 };
 
@@ -297,7 +288,6 @@ export const switchBetweenCameraAndScreenSharing = async (
 
     ui.updateLocalVideo(localStream);
   } else {
-    console.log("switching for screen sharing");
     try {
       screenSharingStream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
