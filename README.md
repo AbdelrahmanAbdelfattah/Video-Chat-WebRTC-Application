@@ -10,8 +10,9 @@
   ![text chat](https://github.com/AbdelrahmanAbdelfattah/Video-Chat-WebRTC-Application/blob/master/Screenshot%202023-09-25%20121337.png)
 * #### Screen Sharing: Share your screen to present information, collaborate on projects, or demonstrate concepts.
   ![text chat](https://github.com/AbdelrahmanAbdelfattah/Video-Chat-WebRTC-Application/blob/master/Screenshot%202023-09-25%20122021.png)
-* * #### Text Chat: Engage in text-based conversations in real-time, providing a convenient way to exchange messages.
+* #### Text Chat: Engage in text-based conversations in real-time, providing a convenient way to exchange messages.
   ![text chat](https://github.com/AbdelrahmanAbdelfattah/Video-Chat-WebRTC-Application/blob/master/Screenshot%202023-09-25%20121609.png)
+* #### Record Screen: Capture and record the shared screen to save important presentations, discussions, or demonstrations for future reference.
 * #### Audio Controls: Easily mute or unmute the microphone during a call to manage audio output.
 * #### Camera Toggle: Quickly switch the camera on and off to control video streaming.
 
